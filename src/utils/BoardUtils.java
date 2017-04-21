@@ -1,3 +1,7 @@
+package utils;
+
+import game.Position;
+
 /**
  * Created by hiroshi on 21/04/17.
  */

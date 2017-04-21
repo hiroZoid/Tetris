@@ -1,12 +1,11 @@
+package game;
+
 /**
  * Created by hiroshi on 19/04/17.
  */
 public class Position {
 
     private int x, y;
-
-    public Position() {
-    }
 
     public Position(int x, int y) {
         this.x = x;
@@ -15,7 +14,7 @@ public class Position {
 
     @Override
     public String toString() {
-        return "Position(" + x + ", " + y + ")";
+        return "game.Position(" + x + ", " + y + ")";
     }
 
     public int getX() {

@@ -1,3 +1,9 @@
+package gui;
+
+import game.TetrisGame;
+import game.TetrisScoreBoard;
+import game.UserInput;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -35,7 +41,7 @@ public class Tetris {
                         tetrisGame.appendUserInput(UserInput.MOVE_LEFT);
                         break;
                     case KeyEvent.VK_RIGHT:
-                        tetrisGame.appendUserInput(UserInput.MOVE_RIGTH);
+                        tetrisGame.appendUserInput(UserInput.MOVE_RIGHT);
                         break;
                     case KeyEvent.VK_SPACE:
                         tetrisGame.appendUserInput(UserInput.MOVE_DOWN);
@@ -50,7 +56,7 @@ public class Tetris {
 
         jLabelScoreBoard = new JLabel();
 
-        jFrameMainWindow = new JFrame("Tetris");
+        jFrameMainWindow = new JFrame("gui.Tetris");
         jFrameMainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrameMainWindow.setSize(boardWidth * 35, boardHeight * 35);
         jFrameMainWindow.setLayout(new BorderLayout());

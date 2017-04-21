@@ -1,3 +1,8 @@
+package game;
+
+import utils.BoardUtils;
+import utils.PieceUtils;
+
 import java.util.Random;
 import java.util.Vector;
 
@@ -106,7 +111,7 @@ public class TetrisGame {
                 case MOVE_LEFT:
                     move(new Position(position.getX() - 1, position.getY()));
                     break;
-                case MOVE_RIGTH:
+                case MOVE_RIGHT:
                     move(new Position(position.getX() + 1, position.getY()));
                     break;
                 case MOVE_DOWN:

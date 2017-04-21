@@ -1,3 +1,5 @@
+package game;
+
 /**
  * Created by hiroshi on 21/04/17.
  */
