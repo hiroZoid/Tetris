@@ -1,14 +1,16 @@
 import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class Tetris {
+public class Tetris implements KeyListener {
 
-    protected int boardWidth;
-    protected int boardHeight;
+    private int boardWidth;
+    private int boardHeight;
 
-    protected JFrame jFrame;
-    protected JPanel jPanel;
+    private JFrame jFrame;
+    private JPanel jPanel;
 
-    protected TetrisGame tetrisGame;
+    private TetrisGame tetrisGame;
 
     public Tetris(int boardWidth, int boardHeight) {
         this.boardWidth = boardWidth;
@@ -18,17 +20,12 @@ public class Tetris {
             @Override
             public void drawScreen() {
                 jPanel.repaint();
-//                for (int x = 0; x < boardWidth; x++) {
-//                    for (int y = 0; y < boardHeight; y++) {
-//                        System.out.print(tetrisGame.getBoard()[x][y]);
-//                    }
-//                    System.out.println();
-//                }
-//                System.out.println();
             }
         };
 
         jPanel = new TetrisJPanel(tetrisGame.getBoard(), boardWidth, boardHeight);
+        jPanel.addKeyListener(this);
+        jPanel.setFocusable(true);
 
         jFrame = new JFrame("Tetris");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,5 +44,32 @@ public class Tetris {
         Tetris tetris = new Tetris(40, 40);
         tetris.run();
 
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int keyCode = e.getKeyCode();
+        switch (keyCode) {
+            case KeyEvent.VK_UP:
+                tetrisGame.rotateClockwise();
+                break;
+            case KeyEvent.VK_DOWN:
+                tetrisGame.rotateAntiClockwise();
+                break;
+            case KeyEvent.VK_LEFT:
+                tetrisGame.moveLeft();
+                break;
+            case KeyEvent.VK_RIGHT:
+                tetrisGame.moveRight();
+                break;
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 }
