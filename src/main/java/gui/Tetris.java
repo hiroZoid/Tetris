@@ -56,7 +56,7 @@ public class Tetris {
 
         jLabelScoreBoard = new JLabel();
 
-        jFrameMainWindow = new JFrame("gui.Tetris");
+        jFrameMainWindow = new JFrame("main.gui.Tetris");
         jFrameMainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrameMainWindow.setSize(boardWidth * 35, boardHeight * 35);
         jFrameMainWindow.setLayout(new BorderLayout());

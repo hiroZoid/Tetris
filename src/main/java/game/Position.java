@@ -14,7 +14,7 @@ public class Position {
 
     @Override
     public String toString() {
-        return "game.Position(" + x + ", " + y + ")";
+        return "main.game.Position(" + x + ", " + y + ")";
     }
 
     public int getX() {
