@@ -26,7 +26,7 @@ public class Tetris implements KeyListener {
 
     public void run() {
         jFrame.setVisible(true);
-        tetrisGame.startGame();
+        tetrisGame.startGame(1000, 10);
     }
 
 

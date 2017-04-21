@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.Random;
 
 /**
  * Created by hiroshi on 19/04/17.
@@ -27,9 +28,13 @@ public class TetrisJPanel extends JPanel implements TetrisPainter {
                     if (this.board[x][y] == 0) {
                         g.setColor(Color.BLACK);
                     } else {
-                        g.setColor(Color.WHITE);
+                        Random random = new Random(this.board[x][y]);
+                        int red = 128 + random.nextInt(128);
+                        int green = 128 + random.nextInt(128);
+                        int blue = 128 + random.nextInt(128);
+                        g.setColor(new Color(red, green, blue));
                     }
-                    g.fillRect(x * boxWidth + xGap, y * boxHeight + yGap, boxWidth - 1, boxHeight - 1);
+                    g.fillRect(x * boxWidth + xGap, y * boxHeight + yGap, boxWidth, boxHeight);
                 }
             }
         }

@@ -62,6 +62,17 @@ public class PieceUtils {
         }
     }
 
+    public static void addColor(int[][] piece, Random random) {
+        int length = piece.length;
+        int color = random.nextInt();
+
+        for (int x = 0; x < length; x++) {
+            for (int y = 0; y < length; y++) {
+                piece[x][y] *= color;
+            }
+        }
+    }
+
     public static void transpose(int[][] piece) {
         int length = piece.length;
 

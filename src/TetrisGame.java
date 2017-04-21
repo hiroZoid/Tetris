@@ -11,6 +11,9 @@ public class TetrisGame {
     }
 
     private GameState gameState;
+    private long gameDelay;
+    private long gameSpeed;
+    private Random random;
 
     private TetrisPainter tetrisPainter;
     private int[][] board;
@@ -25,15 +28,19 @@ public class TetrisGame {
         this.gameState = GameState.STOPPED;
     }
 
-    public void startGame() {
+    public void startGame(long gameDelay, long gameSpeed) {
+        this.gameDelay = gameDelay;
+        this.gameSpeed = gameSpeed;
+        this.random = new Random(1);
+
         gameState = GameState.DROPPING;
         while (gameState != GameState.STOPPED) {
             long time = System.currentTimeMillis();
             automaticGameFlow();
             tetrisPainter.paintTetris(board);
-            while (System.currentTimeMillis() - time < 1000) {
-                boolean forcePieceSlide = userDependantGameFlow();
-                if (forcePieceSlide) {
+            while (System.currentTimeMillis() - time < this.gameDelay) {
+                boolean forcePieceToSlide = userDependantGameFlow();
+                if (forcePieceToSlide) {
                     break;
                 }
             }
@@ -45,8 +52,7 @@ public class TetrisGame {
             case STOPPED:
                 break;
             case DROPPING:
-                piece = PieceUtils.randomChoose(new Random());
-                position = new Position((getBoardWidth() - piece.length) / 2, 0);
+                dropPiece();
                 if (BoardUtils.willCollide(board, piece, position)) {
                     gameState = GameState.STOPPED;
                 } else {
@@ -58,13 +64,30 @@ public class TetrisGame {
                 boolean moved = move(new Position(position.getX(), position.getY() + 1));
                 if (!moved) {
                     gameState = GameState.DROPPING;
+                    gameDelay -= gameSpeed;
+                    if (gameDelay < 0) {
+                        gameDelay = 0;
+                    }
                 }
                 break;
         }
     }
 
+    private void dropPiece() {
+        piece = PieceUtils.randomChoose(random);
+        PieceUtils.addColor(piece, random);
+        if (random.nextInt(2) == 0) {
+            PieceUtils.swapHorizontally(piece);
+        }
+        int rotations = random.nextInt(4);
+        for (int i = 0; i < rotations; i++) {
+            PieceUtils.rotateClockwise(piece);
+        }
+        position = new Position((getBoardWidth() - piece.length) / 2, 0);
+    }
+
     private boolean userDependantGameFlow() {
-        boolean forcePieceSlide = false;
+        boolean forcePieceToSlide = false;
 
         if (gameState == GameState.SLIDING && !userInputs.isEmpty()) {
             switch (userInputs.remove(0)) {
@@ -75,7 +98,7 @@ public class TetrisGame {
                     move(new Position(position.getX() + 1, position.getY()));
                     break;
                 case MOVE_DOWN:
-                    forcePieceSlide = true;
+                    forcePieceToSlide = true;
                     break;
                 case ROTATE_CLOCKWISE:
                     rotatePiece(false);
@@ -87,7 +110,7 @@ public class TetrisGame {
             tetrisPainter.paintTetris(board);
         }
 
-        return forcePieceSlide;
+        return forcePieceToSlide;
     }
 
     private boolean move(Position nextPosition) {
