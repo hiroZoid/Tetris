@@ -4,33 +4,24 @@ import java.awt.event.KeyListener;
 
 public class Tetris implements KeyListener {
 
-    private int boardWidth;
-    private int boardHeight;
-
     private JFrame jFrame;
-    private JPanel jPanel;
+    private TetrisJPanel tetrisJPanel;
 
     private TetrisGame tetrisGame;
 
     public Tetris(int boardWidth, int boardHeight) {
-        this.boardWidth = boardWidth;
-        this.boardHeight = boardHeight;
 
-        tetrisGame = new TetrisGame(boardWidth, boardHeight) {
-            @Override
-            public void drawScreen() {
-                jPanel.repaint();
-            }
-        };
-
-        jPanel = new TetrisJPanel(tetrisGame.getBoard(), boardWidth, boardHeight);
-        jPanel.addKeyListener(this);
-        jPanel.setFocusable(true);
+        tetrisJPanel = new TetrisJPanel();
+        tetrisJPanel.addKeyListener(this);
+        tetrisJPanel.setFocusable(true);
+        tetrisJPanel.setDoubleBuffered(true);
 
         jFrame = new JFrame("Tetris");
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         jFrame.setSize(400, 400);
-        jFrame.setContentPane(jPanel);
+        jFrame.setContentPane(tetrisJPanel);
+
+        tetrisGame = new TetrisGame(boardWidth, boardHeight, tetrisJPanel);
     }
 
     public void run() {
@@ -55,16 +46,19 @@ public class Tetris implements KeyListener {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
             case KeyEvent.VK_UP:
-                tetrisGame.rotateClockwise();
+                tetrisGame.appendUserInput(UserInput.ROTATE_ANTICLOCKWISE);
                 break;
             case KeyEvent.VK_DOWN:
-                tetrisGame.rotateAntiClockwise();
+                tetrisGame.appendUserInput(UserInput.ROTATE_CLOCKWISE);
                 break;
             case KeyEvent.VK_LEFT:
-                tetrisGame.moveLeft();
+                tetrisGame.appendUserInput(UserInput.MOVE_LEFT);
                 break;
             case KeyEvent.VK_RIGHT:
-                tetrisGame.moveRight();
+                tetrisGame.appendUserInput(UserInput.MOVE_RIGTH);
+                break;
+            case KeyEvent.VK_SPACE:
+                tetrisGame.appendUserInput(UserInput.MOVE_DOWN);
                 break;
         }
     }
