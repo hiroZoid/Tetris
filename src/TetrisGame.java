@@ -14,15 +14,18 @@ public class TetrisGame {
     private long gameDelay;
     private long gameSpeed;
     private Random random;
+    private int score;
 
     private TetrisPainter tetrisPainter;
+    private TetrisScoreBoard tetrisScoreBoard;
     private int[][] board;
     private int[][] piece;
     private Position position;
     private Vector<UserInput> userInputs;
 
-    public TetrisGame(int boardWidth, int boardHeight, TetrisPainter tetrisPainter) {
+    public TetrisGame(int boardWidth, int boardHeight, TetrisPainter tetrisPainter, TetrisScoreBoard tetrisScoreBoard) {
         this.tetrisPainter = tetrisPainter;
+        this.tetrisScoreBoard = tetrisScoreBoard;
         this.board = new int[boardWidth][boardHeight];
         this.userInputs = new Vector<>();
         this.gameState = GameState.STOPPED;
@@ -31,13 +34,16 @@ public class TetrisGame {
     public void startGame(long gameDelay, long gameSpeed) {
         this.gameDelay = gameDelay;
         this.gameSpeed = gameSpeed;
+        this.score = 0;
         this.random = new Random(1);
-
         gameState = GameState.DROPPING;
+
+        tetrisScoreBoard.showScore(score);
+
         while (gameState != GameState.STOPPED) {
             long time = System.currentTimeMillis();
             automaticGameFlow();
-            tetrisPainter.paintTetris(board);
+            tetrisPainter.paintTetris(board, isToShowFilledRows());
             while (System.currentTimeMillis() - time < this.gameDelay) {
                 boolean forcePieceToSlide = userDependantGameFlow();
                 if (forcePieceToSlide) {
@@ -52,9 +58,12 @@ public class TetrisGame {
             case STOPPED:
                 break;
             case DROPPING:
+                score += BoardUtils.removeFilledRows(board);
+                tetrisScoreBoard.showScore(score);
                 dropPiece();
                 if (BoardUtils.willCollide(board, piece, position)) {
                     gameState = GameState.STOPPED;
+                    tetrisScoreBoard.showGameOver(score);
                 } else {
                     BoardUtils.placePiece(board, piece, position);
                     gameState = GameState.SLIDING;
@@ -83,7 +92,10 @@ public class TetrisGame {
         for (int i = 0; i < rotations; i++) {
             PieceUtils.rotateClockwise(piece);
         }
-        position = new Position((getBoardWidth() - piece.length) / 2, 0);
+        position = new Position((getBoardWidth() - piece.length) / 2, -piece.length);
+        while (BoardUtils.willPieceBeOutOfBounds(board, piece, position)) {
+            position.setY(position.getY() + 1);
+        }
     }
 
     private boolean userDependantGameFlow() {
@@ -107,7 +119,7 @@ public class TetrisGame {
                     rotatePiece(true);
                     break;
             }
-            tetrisPainter.paintTetris(board);
+            tetrisPainter.paintTetris(board, isToShowFilledRows());
         }
 
         return forcePieceToSlide;
@@ -157,6 +169,10 @@ public class TetrisGame {
 
     private int getBoardWidth() {
         return board.length;
+    }
+
+    private boolean isToShowFilledRows() {
+        return gameState == GameState.DROPPING;
     }
 
     public void appendUserInput(UserInput userInput) {

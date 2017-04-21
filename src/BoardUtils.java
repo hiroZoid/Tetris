@@ -42,7 +42,6 @@ public class BoardUtils {
                     board[position.getX() + x][position.getY() + y] = piece[x][y];
                 }
             }
-
         }
     }
 
@@ -59,4 +58,40 @@ public class BoardUtils {
         }
     }
 
+    private static void removeRow(int[][] board, int row) {
+        int boardWidth = board.length;
+
+        for (int y = row; y > 0; y--) {
+            for (int x = 0; x < boardWidth; x++) {
+                board[x][y] = board[x][y - 1];
+            }
+        }
+
+        for (int x = 0; x < boardWidth; x++) {
+            board[x][0] = 0;
+        }
+    }
+
+    public static int removeFilledRows(int[][] board) {
+        int boardWidth = board.length;
+        int boardHeight = board[0].length;
+        int removedRows = 0;
+
+        for (int y = 0; y < boardHeight; y++) {
+            boolean filledRow = true;
+            for (int x = 0; x < boardWidth; x++) {
+                if (board[x][y] == 0) {
+                    filledRow = false;
+                    break;
+                }
+            }
+
+            if (filledRow) {
+                removeRow(board, y);
+                removedRows++;
+            }
+        }
+
+        return removedRows;
+    }
 }
